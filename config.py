@@ -19,10 +19,15 @@ PYTHON_VERSION = "3.12"
 # Base directory (root of the project)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Asset and database paths
-ASSETS_DIR = os.path.join(BASE_DIR, "assets")
-DATABASE_DIR = os.path.join(BASE_DIR, "database")
-DATABASE_PATH = os.path.join(DATABASE_DIR, "history.db")
+# Detect if running on Vercel (read-only filesystem)
+if os.environ.get("VERCEL"):
+    ASSETS_DIR = "/tmp/assets"
+    DATABASE_DIR = "/tmp/database"
+    DATABASE_PATH = "/tmp/database/history.db"
+else:
+    ASSETS_DIR = os.path.join(BASE_DIR, "assets")
+    DATABASE_DIR = os.path.join(BASE_DIR, "database")
+    DATABASE_PATH = os.path.join(DATABASE_DIR, "history.db")
 
 # Ensure directories exist
 os.makedirs(ASSETS_DIR, exist_ok=True)
