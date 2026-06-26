@@ -1,0 +1,38 @@
+# ===================================================
+# JARVIS X AI Assistant - Requirements
+# Python 3.12+
+# ===================================================
+
+# -- Core UI & Graphics (PyQt6) --
+PyQt6>=6.5.0
+PyQt6-Charts>=6.5.0
+Pillow>=10.0.0
+
+# -- Voice & Audio --
+SpeechRecognition>=3.10.0
+pyttsx3>=2.90
+edge-tts>=6.1.0
+PyAudio>=0.2.13
+# pvporcupine>=3.0.0 (Optional: requires Picovoice API developer key. Falling back to free continuous SpeechRecognition)
+
+# -- AI & NLP --
+openai>=1.0.0
+requests>=2.31.0
+wikipedia>=1.4.0
+beautifulsoup4>=4.12.0
+
+# -- Computer Vision --
+opencv-python>=4.8.0
+# face-recognition>=1.7.0 (Optional: requires CMake & C++ compiler. Standard face auth runs via OpenCV fallback)
+
+# -- Encryption & System --
+cryptography>=41.0.0
+psutil>=5.9.0
+screen-brightness-control>=0.2.10
+pycaw>=20230407; sys_platform == "win32"
+comtypes>=1.2.0; sys_platform == "win32"
+keyboard>=0.13.5
+mss>=9.0.0
+
+# -- Packaging --
+pyinstaller>=6.0.0
