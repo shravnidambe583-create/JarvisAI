@@ -12,7 +12,7 @@ Pillow>=10.0.0
 SpeechRecognition>=3.10.0
 pyttsx3>=2.90
 edge-tts>=6.1.0
-PyAudio>=0.2.13
+# PyAudio>=0.2.13 (Optional: required for voice speech-to-text. Standard keyboard text entry runs fine without it)
 # pvporcupine>=3.0.0 (Optional: requires Picovoice API developer key. Falling back to free continuous SpeechRecognition)
 
 # -- AI & NLP --
