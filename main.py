@@ -20,16 +20,19 @@ from core.orchestrator import JarvisOrchestrator
 def print_banner() -> None:
     """Print startup diagnostic banner."""
     banner = f"""
-    ╔══════════════════════════════════════════════╗
-    ║                                              ║
-    ║        🤖  {APP_NAME} MAINFRAME  🤖          ║
-    ║              Version {APP_VERSION}                  ║
-    ║                                              ║
-    ║   Just A Rather Very Intelligent System      ║
-    ║                                              ║
-    ╚══════════════════════════════════════════════╝
+    +==============================================+
+    |                                              |
+    |          {APP_NAME} MAINFRAME                |
+    |              Version {APP_VERSION}                  |
+    |                                              |
+    |   Just A Rather Very Intelligent System      |
+    |                                              |
+    +==============================================+
     """
-    print(banner)
+    try:
+        print(banner)
+    except Exception:
+        print(f"[{APP_NAME} MAINFRAME v{APP_VERSION}]")
 
 
 def check_dependencies() -> dict:
@@ -58,25 +61,25 @@ def check_dependencies() -> dict:
         ("edge_tts", "edge-tts"),
     ]
 
-    print("\n📦 Checking system dependencies...\n")
+    print("\n[Dependency Check] Verifying system libraries...\n")
 
     for module, package in core_packages:
         try:
             __import__(module)
             deps[package] = True
-            print(f"  ✅ {package}")
+            print(f"  [OK] {package}")
         except ImportError:
             deps[package] = False
-            print(f"  ❌ {package} (REQUIRED - run setup.bat)")
+            print(f"  [MISSING] {package} (REQUIRED - run setup.bat)")
 
     for module, package in optional_packages:
         try:
             __import__(module)
             deps[package] = True
-            print(f"  ✅ {package} (Optional)")
+            print(f"  [OK] {package} (Optional)")
         except ImportError:
             deps[package] = False
-            print(f"  ⚠️  {package} (Optional - not installed)")
+            print(f"  [WARN] {package} (Optional - not installed)")
 
     print()
     return deps
@@ -138,7 +141,7 @@ def main() -> None:
             if not available and pkg in ["PyQt6", "SpeechRecognition", "pyttsx3", "Pillow", "psutil", "cryptography"]
         ]
         if critical_missing:
-            print(f"\n⚠️  Critical dependencies missing: {', '.join(critical_missing)}")
+            print(f"\n[WARN] Critical dependencies missing: {', '.join(critical_missing)}")
             print("Run: setup.bat or pip install -r requirements.txt\n")
             sys.exit(1)
 
@@ -153,9 +156,9 @@ def main() -> None:
     if not args.skip_login:
         authenticated = face_login_flow(orchestrator)
         if not authenticated:
-            print("\n❌ Authentication match failed. Mainframe locked.")
+            print("\n[FAIL] Authentication match failed. Mainframe locked.")
             sys.exit(1)
-        print("\n✅ Access granted. Initializing environment panels...\n")
+        print("\n[SUCCESS] Access granted. Initializing environment panels...\n")
 
     # Launch GUI Mode
     if not args.no_gui:
@@ -174,7 +177,7 @@ def main() -> None:
             sys.exit(app.exec())
             
         except Exception as e:
-            print(f"\n❌ GUI Engine failed: {e}")
+            print(f"\n[FAIL] GUI Engine failed: {e}")
             print("Falling back to terminal console mode...\n")
             cli_mode(orchestrator)
     else:
@@ -185,14 +188,14 @@ def cli_mode(orchestrator: JarvisOrchestrator) -> None:
     """
     Runs JARVIS X in simple console command line mode when GUI is bypassed.
     """
-    print("\n🖥️  JARVIS X Terminal Interface Active")
+    print("\n[CLI] JARVIS X Terminal Interface Active")
     print("Type 'exit', 'quit' or 'bye' to sign off.\n")
 
     orchestrator.tts.speak("JARVIS systems are online via terminal interface. Standing by, Sir.")
 
     while True:
         try:
-            user_input = input("\n👤 You: ").strip()
+            user_input = input("\n[USER]: ").strip()
 
             if not user_input:
                 continue
@@ -204,14 +207,14 @@ def cli_mode(orchestrator: JarvisOrchestrator) -> None:
             # Send command directly to orchestrator logic
             response = orchestrator._process_command_logic(user_input)
             
-            print(f"\n🤖 JARVIS: {response}")
+            print(f"\n[JARVIS]: {response}")
             orchestrator.tts.speak(response)
 
         except KeyboardInterrupt:
-            print("\n\n👋 System interrupted. Signing off.")
+            print("\n\n[BYE] System interrupted. Signing off.")
             break
         except Exception as e:
-            print(f"\n❌ Mainframe execution error: {e}")
+            print(f"\n[ERROR] Mainframe execution error: {e}")
 
 
 if __name__ == "__main__":
