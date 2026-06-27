@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Clock, Sun, Cpu, Shield, Award, Play, Square, Volume2, 
-  VolumeX, Camera, FileText, CheckSquare, Plus, RefreshCw, Zap
+  VolumeX, Camera, FileText, CheckSquare, Plus, RefreshCw, Zap,
+  TrendingUp, Star, Award as Medal, Lock, Unlock, Grid
 } from 'lucide-react'
 import confetti from 'canvas-confetti'
 
@@ -19,12 +20,12 @@ export function TimeHeader() {
     <div className="flex justify-between items-center w-full px-6 py-2 bg-black/40 border-b border-cyan-500/10 backdrop-blur-md">
       <div className="flex items-center gap-3">
         <Zap className="w-5 h-5 text-cyan-400 animate-pulse" />
-        <span className="font-mono text-xs tracking-widest text-cyan-400/80">JARVIS X :: SYSTEM MAIN LINK</span>
+        <span className="font-mono text-xs tracking-widest text-cyan-400/80">JARVIS X INFINITY :: MAINFRAME ACTIVE</span>
       </div>
       <div className="flex items-center gap-6 font-mono text-sm">
         <span className="text-slate-400">{time.toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}</span>
         <span className="text-cyan-400 font-bold tracking-wider">{time.toLocaleTimeString()}</span>
-        <span className="px-2 py-0.5 text-[10px] bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/40">LATENCY: 12MS</span>
+        <span className="px-2 py-0.5 text-[10px] bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/40">LATENCY: 8MS</span>
       </div>
     </div>
   )
@@ -56,7 +57,7 @@ export function WeatherWidget() {
   )
 }
 
-// 3. CPU/RAM Diagnostics Gauge
+// 3. Diagnostics & Future Prediction Dashboard
 export function DiagnosticsWidget() {
   const [stats, setStats] = useState({ cpu: 22, ram: 48, battery: 100, temp: 42 })
 
@@ -66,7 +67,7 @@ export function DiagnosticsWidget() {
         cpu: Math.floor(18 + Math.random() * 15),
         ram: Math.floor(45 + Math.random() * 6),
         battery: 100,
-        temp: Math.floor(40 + Math.random() * 5)
+        temp: Math.floor(40 + Math.random() * 4)
       })
     }, 2000)
     return () => clearInterval(interval)
@@ -80,38 +81,45 @@ export function DiagnosticsWidget() {
       className="glass-panel w-full interactive"
     >
       <div className="glass-panel-header">
-        <span><Cpu className="inline w-4 h-4 mr-2" />MAINFRAME LOAD</span>
-        <span className="text-[10px] text-purple-500/60 font-mono">SECURE</span>
+        <span><Cpu className="inline w-4 h-4 mr-2" />PREDICTION DASHBOARD</span>
+        <span className="text-[10px] text-cyan-400/80 font-mono">FORECAST</span>
       </div>
       <div className="p-4 space-y-3 font-mono text-xs">
+        {/* Core Stats */}
         <div>
           <div className="flex justify-between text-slate-400 mb-1">
-            <span>CPU INTEL CORE</span>
+            <span>CPU WORKLOAD</span>
             <span className="text-cyan-400">{stats.cpu}%</span>
           </div>
-          <div className="w-full h-1.5 bg-slate-900 rounded overflow-hidden border border-cyan-500/10">
+          <div className="w-full h-1 bg-slate-900 rounded overflow-hidden">
             <div className="h-full bg-cyan-400 transition-all duration-500" style={{ width: `${stats.cpu}%` }}></div>
           </div>
         </div>
 
-        <div>
-          <div className="flex justify-between text-slate-400 mb-1">
-            <span>SYSTEM RAM</span>
-            <span className="text-purple-400">{stats.ram}%</span>
+        {/* Future predictions */}
+        <div className="border border-cyan-500/10 p-2.5 rounded bg-black/40 space-y-2 mt-2">
+          <div className="flex items-center gap-1.5 text-cyan-400 font-bold">
+            <TrendingUp className="w-3.5 h-3.5" />
+            <span>NEURAL HABIT PROJECTIONS</span>
           </div>
-          <div className="w-full h-1.5 bg-slate-900 rounded overflow-hidden border border-purple-500/10">
-            <div className="h-full bg-purple-400 transition-all duration-500" style={{ width: `${stats.ram}%` }}></div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 pt-1 text-[10px] text-slate-500">
-          <div className="border border-slate-800 p-1.5 rounded bg-black/20">
-            <p>BATTERY POWER</p>
-            <p className="text-white font-bold text-xs mt-0.5">{stats.battery}% [AC]</p>
-          </div>
-          <div className="border border-slate-800 p-1.5 rounded bg-black/20">
-            <p>CORE TEMPERATURE</p>
-            <p className="text-white font-bold text-xs mt-0.5">{stats.temp}°C</p>
+          
+          <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400 pt-1">
+            <div>
+              <p className="text-[9px] text-slate-500">FOCUS PEAK WINDOW</p>
+              <p className="text-white font-bold mt-0.5">14:00 - 17:30</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-slate-500">EST. TASK COMPLETION</p>
+              <p className="text-purple-400 font-bold mt-0.5">2.4 Hours Left</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-slate-500 font-mono">BATTERY WEAR RATE</p>
+              <p className="text-green-400 font-bold mt-0.5">Optimal [Steady]</p>
+            </div>
+            <div>
+              <p className="text-[9px] text-slate-500">LEARNING HABIT ACCURACY</p>
+              <p className="text-cyan-400 font-bold mt-0.5">94.8% Match</p>
+            </div>
           </div>
         </div>
       </div>
@@ -121,9 +129,9 @@ export function DiagnosticsWidget() {
 
 // 4. Pomodoro Focus Timer Widget
 export function FocusWidget() {
-  const [seconds, setSeconds] = useState(1500) // 25 mins
+  const [seconds, setSeconds] = useState(1500)
   const [isActive, setIsActive] = useState(false)
-  const [mode, setMode] = useState('Work') // Work, Break
+  const [mode, setMode] = useState('Work')
   const [lofiActive, setLofiActive] = useState(false)
 
   useEffect(() => {
@@ -194,9 +202,9 @@ export function FocusWidget() {
           <motion.div 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="text-[10px] text-cyan-400/80 font-mono mt-3 animate-pulse border-t border-cyan-500/10 pt-2"
+            className="text-[10px] text-cyan-400/80 font-mono mt-3 border-t border-cyan-500/10 pt-2"
           >
-            🎵 STREAMING LOCAL FOCUS AUDIO BEAT FEED...
+            🎵 STREAMING FOCUS MUSIC FEED...
             <iframe 
               src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=0" 
               width="0" 
@@ -233,7 +241,7 @@ export function VisionWidget({ onExplainRequest }) {
     setScanning(true)
     setTimeout(() => {
       setScanning(false)
-      onExplainRequest("[Vision Scanner OCR] Explain the code layout and resolve compiler warnings visible inside this console snapshot.")
+      onExplainRequest("[Vision Core OCR] Explain the code layout and resolve compiler warnings visible inside this console snapshot.")
     }, 2500)
   }
 
@@ -291,39 +299,55 @@ export function VisionWidget({ onExplainRequest }) {
   )
 }
 
-// 6. Mission Checklists
-export function MissionWidget() {
-  const [tasks, setTasks] = useState([])
+// 6. Gamified Mission System & AI Skill Tree
+export function MissionWidget({ xp, setXp, level, setLevel }) {
+  const [tasks, setTasks] = useState([
+    { id: 1, text: "Configure Flask premium female speech API", completed: true, points: 25 },
+    { id: 2, text: "Interface gyroscopic 3D Worlds & Energy Core", completed: false, points: 50 },
+    { id: 3, text: "Engage smart focus Pomodoro timer beats", completed: false, points: 25 },
+    { id: 4, text: "Execute Screen Vision code OCR analysis", completed: false, points: 50 }
+  ])
   const [newTask, setNewTask] = useState('')
 
-  // Fetch initial tasks from backend
-  useEffect(() => {
-    fetch('/api/tasks')
-      .then(res => res.json())
-      .then(data => {
-        if (data.tasks) {
-          setTasks(data.tasks.map((t, idx) => ({ id: idx, text: t.name || t, completed: false })))
-        }
-      })
-      .catch(() => {
-        setTasks([
-          { id: 1, text: "Execute local Flask backend linkage", completed: true },
-          { id: 2, text: "Interface 3D VRM/Ready Player Me avatar matrix", completed: false },
-          { id: 3, text: "Enable neural Focus controls & OCR Vision scanner", completed: false }
-        ])
-      })
-  }, [])
-
   const handleToggle = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+    const updated = tasks.map(t => {
+      if (t.id === id) {
+        const completedState = !t.completed
+        // Calculate XP gain/loss
+        const gain = completedState ? t.points : -t.points
+        const newXp = xp + gain
+        
+        // Handle level up
+        if (newXp >= 100) {
+          setLevel(prev => prev + 1)
+          setXp(newXp - 100)
+          confetti({ particleCount: 150, spread: 80, colors: ['#00f0ff', '#bf5af2'] })
+        } else if (newXp < 0) {
+          setXp(0)
+        } else {
+          setXp(newXp)
+        }
+        
+        return { ...t, completed: completedState }
+      }
+      return t
+    })
+    setTasks(updated)
   }
 
   const handleAdd = (e) => {
     e.preventDefault()
     if (!newTask.trim()) return
-    setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }])
+    setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, points: 25 }])
     setNewTask('')
   }
+
+  // Skill Tree nodes
+  const skillNodes = [
+    { name: "Speech Link", reqLvl: 1, desc: "Neural audio TTS feedback loops" },
+    { name: "Vision OCR", reqLvl: 2, desc: "Explain complex codes from files" },
+    { name: "Clone Mainframe", reqLvl: 3, desc: "Split core into specialized clone nodes" }
+  ]
 
   return (
     <motion.div 
@@ -333,31 +357,68 @@ export function MissionWidget() {
       className="glass-panel w-full interactive"
     >
       <div className="glass-panel-header">
-        <span><CheckSquare className="inline w-4 h-4 mr-2" />MISSION DIRECTIVE</span>
-        <span className="text-[10px] text-cyan-400 font-mono">{tasks.filter(t => t.completed).length}/{tasks.length} DONE</span>
+        <span><Award className="inline w-4 h-4 mr-2 text-cyan-400" />MISSION DIRECTIVE</span>
+        <span className="text-[10px] text-cyan-400 font-mono">LEVEL {level}</span>
       </div>
-      <div className="p-3 space-y-2 max-h-48 overflow-y-auto">
-        {tasks.map(t => (
-          <div key={t.id} onClick={() => handleToggle(t.id)} className="flex items-center gap-2 cursor-pointer hover:bg-white/5 p-1 rounded transition-colors text-xs font-mono">
-            <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${t.completed ? 'border-cyan-400 bg-cyan-400/20' : 'border-slate-600'}`}>
-              {t.completed && <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />}
-            </div>
-            <span className={t.completed ? 'text-slate-500 line-through' : 'text-slate-300'}>{t.text}</span>
+      
+      <div className="p-3 space-y-3">
+        {/* XP Level Progress Bar */}
+        <div className="font-mono text-[10px] text-slate-400">
+          <div className="flex justify-between mb-1">
+            <span>EXPERIENCE POINT BUFFER</span>
+            <span className="text-cyan-400">{xp}/100 XP</span>
           </div>
-        ))}
+          <div className="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-cyan-500/10 p-0.5">
+            <div className="h-full bg-cyan-400 rounded-full transition-all duration-300" style={{ width: `${xp}%` }}></div>
+          </div>
+        </div>
+
+        {/* Task Items */}
+        <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
+          {tasks.map(t => (
+            <div 
+              key={t.id} 
+              onClick={() => handleToggle(t.id)} 
+              className="flex items-center justify-between cursor-pointer hover:bg-white/5 p-1 rounded transition-colors text-xs font-mono"
+            >
+              <div className="flex items-center gap-2">
+                <div className={`w-3.5 h-3.5 rounded border flex items-center justify-center ${t.completed ? 'border-cyan-400 bg-cyan-400/20' : 'border-slate-600'}`}>
+                  {t.completed && <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />}
+                </div>
+                <span className={t.completed ? 'text-slate-500 line-through' : 'text-slate-300'}>{t.text}</span>
+              </div>
+              <span className={`text-[9px] ${t.completed ? 'text-slate-600' : 'text-cyan-500/70'}`}>+{t.points}XP</span>
+            </div>
+          ))}
+        </div>
         
-        <form onSubmit={handleAdd} className="flex gap-2 border-t border-slate-800 pt-2 mt-1">
-          <input 
-            type="text" 
-            value={newTask} 
-            onChange={e => setNewTask(e.target.value)}
-            placeholder="Add dynamic objective..." 
-            className="flex-1 bg-black/30 border border-slate-700 rounded px-2 py-1 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 font-mono"
-          />
-          <button type="submit" className="glow-button py-1 px-2 flex items-center justify-center">
-            <Plus className="w-3 h-3" />
-          </button>
-        </form>
+        {/* Skill Tree Matrix section */}
+        <div className="border-t border-slate-800 pt-2 mt-1 space-y-2">
+          <div className="flex items-center gap-1.5 text-purple-400 font-mono text-[10px] font-bold">
+            <Grid className="w-3.5 h-3.5" />
+            <span>AI COGNITIVE SKILL TREE</span>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2">
+            {skillNodes.map((s, idx) => {
+              const unlocked = level >= s.reqLvl
+              return (
+                <div 
+                  key={idx}
+                  className={`p-1.5 rounded border flex flex-col items-center text-center transition-all ${
+                    unlocked 
+                      ? 'border-cyan-500/30 bg-cyan-500/5 text-cyan-200' 
+                      : 'border-slate-800 bg-black/40 text-slate-500'
+                  }`}
+                  title={`${s.name}: ${s.desc} (Requires Level ${s.reqLvl})`}
+                >
+                  {unlocked ? <Unlock className="w-3.5 h-3.5 text-cyan-400 mb-1" /> : <Lock className="w-3.5 h-3.5 mb-1" />}
+                  <span className="text-[8px] font-mono leading-tight">{s.name}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </motion.div>
   )

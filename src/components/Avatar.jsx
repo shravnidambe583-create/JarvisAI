@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 
-// Procedural Hologram Bust fallback & main core design
+// Procedural Hologram Bust representing the female AI Jarvis assistant
 function ProceduralAvatar({ hologramMode, mood, micActive }) {
   const groupRef = useRef()
   const headRef = useRef()
@@ -12,25 +12,29 @@ function ProceduralAvatar({ hologramMode, mood, micActive }) {
   const mouthRef = useRef()
   const orbitRef1 = useRef()
   const orbitRef2 = useRef()
+  
+  // Left/Right Braids (Procedural Hair detail for female avatar look)
+  const leftBraidRef = useRef()
+  const rightBraidRef = useRef()
 
   // Blink timing variables
   const blinkTimer = useRef(0)
   const isBlinking = useRef(false)
 
-  // Mood color map
+  // Mood color maps
   const getColors = () => {
-    if (hologramMode) return { primary: '#00f0ff', secondary: '#005577', eyeColor: '#00f0ff' }
+    if (hologramMode) return { primary: '#00f0ff', secondary: '#005577', eyeColor: '#00f0ff', hairColor: '#00ccff' }
     
     switch (mood) {
       case 'sad':
-        return { primary: '#0a84ff', secondary: '#002b55', eyeColor: '#00a3ff' }
+        return { primary: '#0a84ff', secondary: '#002b55', eyeColor: '#00a3ff', hairColor: '#0055aa' }
       case 'excited':
-        return { primary: '#ff375f', secondary: '#550011', eyeColor: '#ff0033' }
+        return { primary: '#ff375f', secondary: '#550011', eyeColor: '#ff0033', hairColor: '#cc0044' }
       case 'tired':
-        return { primary: '#ff9f0a', secondary: '#553300', eyeColor: '#ffbb00' }
+        return { primary: '#ff9f0a', secondary: '#553300', eyeColor: '#ffbb00', hairColor: '#cc7700' }
       case 'happy':
       default:
-        return { primary: '#00f0ff', secondary: '#002b33', eyeColor: '#5ff0ff' }
+        return { primary: '#00f0ff', secondary: '#002b33', eyeColor: '#5ff0ff', hairColor: '#0088aa' }
     }
   }
 
@@ -42,14 +46,14 @@ function ProceduralAvatar({ hologramMode, mood, micActive }) {
 
     // 1. Idle Breathing Animation (bobbing group)
     if (groupRef.current) {
-      groupRef.current.position.y = Math.sin(t * 1.5 * speedMultiplier) * 0.08
-      groupRef.current.rotation.y = Math.sin(t * 0.2) * 0.1
+      groupRef.current.position.y = Math.sin(t * 1.5 * speedMultiplier) * 0.08 + 0.35
+      groupRef.current.rotation.y = Math.sin(t * 0.15) * 0.08
     }
 
     // 2. Head Tilt & Rotation
     if (headRef.current) {
-      headRef.current.rotation.x = Math.sin(t * 0.8) * 0.03
-      headRef.current.rotation.z = Math.cos(t * 0.5) * 0.02
+      headRef.current.rotation.x = Math.sin(t * 0.8) * 0.04
+      headRef.current.rotation.z = Math.cos(t * 0.4) * 0.02
     }
 
     // 3. Eye Blinking Logic
@@ -75,77 +79,97 @@ function ProceduralAvatar({ hologramMode, mood, micActive }) {
       }
     }
 
-    // 4. Lip-sync animation (scale mouth mesh based on mic levels/sine wave)
+    // 4. Lip-sync animation (scale mouth mesh based on mic levels)
     if (mouthRef.current) {
       if (micActive) {
-        const mouthScale = 0.2 + Math.abs(Math.sin(t * 22)) * 1.2
+        const mouthScale = 0.2 + Math.abs(Math.sin(t * 22)) * 1.4
         mouthRef.current.scale.y = mouthScale
-        mouthRef.current.scale.x = 0.8 + Math.abs(Math.cos(t * 10)) * 0.4
+        mouthRef.current.scale.x = 0.8 + Math.abs(Math.cos(t * 12)) * 0.3
       } else {
-        mouthRef.current.scale.y = THREE.MathUtils.lerp(mouthRef.current.scale.y, 0.1, 0.1)
+        mouthRef.current.scale.y = THREE.MathUtils.lerp(mouthRef.current.scale.y, 0.15, 0.1)
         mouthRef.current.scale.x = THREE.MathUtils.lerp(mouthRef.current.scale.x, 1, 0.1)
       }
     }
 
-    // 5. Gyroscopic Orbit Halos Rotation
+    // 5. Hair braid animations (swaying)
+    if (leftBraidRef.current && rightBraidRef.current) {
+      leftBraidRef.current.rotation.z = Math.sin(t * 1.5) * 0.06 - 0.15
+      rightBraidRef.current.rotation.z = -Math.sin(t * 1.5) * 0.06 + 0.15
+    }
+
+    // 6. Gyroscopic Orbit Halos Rotation
     if (orbitRef1.current) {
-      orbitRef1.current.rotation.z = t * 0.8 * speedMultiplier
+      orbitRef1.current.rotation.z = t * 0.7 * speedMultiplier
       orbitRef1.current.rotation.x = t * 0.3
     }
     if (orbitRef2.current) {
-      orbitRef2.current.rotation.y = -t * 0.6 * speedMultiplier
-      orbitRef2.current.rotation.z = t * 0.2
+      orbitRef2.current.rotation.y = -t * 0.5 * speedMultiplier
+      orbitRef2.current.rotation.z = t * 0.25
     }
   })
 
   return (
-    <group ref={groupRef} position={[0, 0.4, 0]}>
+    <group ref={groupRef} position={[0, 0.35, 0]}>
       {/* 3D Hologram Head Body */}
       <mesh ref={headRef}>
-        <sphereGeometry args={[0.6, 32, 32]} />
+        <sphereGeometry args={[0.55, 32, 32]} />
         <meshStandardMaterial
           color={colors.primary}
           wireframe={true}
           transparent={true}
           opacity={0.3}
-          roughness={0.1}
-          metalness={0.9}
+          roughness={0.15}
+          metalness={0.8}
         />
         
         {/* Inner Glowing Core */}
-        <mesh scale={[0.8, 0.8, 0.8]}>
-          <sphereGeometry args={[0.5, 16, 16]} />
+        <mesh scale={[0.82, 0.82, 0.82]}>
+          <sphereGeometry args={[0.55, 16, 16]} />
           <meshBasicMaterial
             color={colors.secondary}
             transparent={true}
-            opacity={0.25}
+            opacity={0.2}
           />
         </mesh>
 
-        {/* Eyes (Glowing visors) */}
-        <group position={[0, 0.15, 0.48]}>
+        {/* EYES: Glowing female LED Visors */}
+        <group position={[0, 0.12, 0.44]}>
           {/* Left Eye */}
-          <mesh ref={leftEyeRef} position={[-0.22, 0, 0]}>
-            <boxGeometry args={[0.15, 0.04, 0.05]} />
+          <mesh ref={leftEyeRef} position={[-0.2, 0, 0]}>
+            <boxGeometry args={[0.13, 0.03, 0.05]} />
             <meshBasicMaterial color={colors.eyeColor} />
           </mesh>
           {/* Right Eye */}
-          <mesh ref={rightEyeRef} position={[0.22, 0, 0]}>
-            <boxGeometry args={[0.15, 0.04, 0.05]} />
+          <mesh ref={rightEyeRef} position={[0.2, 0, 0]}>
+            <boxGeometry args={[0.13, 0.03, 0.05]} />
             <meshBasicMaterial color={colors.eyeColor} />
           </mesh>
         </group>
 
-        {/* Cyber-Mouth (Audio feedback line) */}
-        <mesh ref={mouthRef} position={[0, -0.22, 0.52]}>
-          <boxGeometry args={[0.2, 0.02, 0.02]} />
+        {/* Mouth/Voice feedback mesh */}
+        <mesh ref={mouthRef} position={[0, -0.22, 0.48]}>
+          <boxGeometry args={[0.16, 0.02, 0.02]} />
           <meshBasicMaterial color={colors.primary} />
         </mesh>
+
+        {/* Female Hair Braid Elements (Procedural Cyber-Cylinders) */}
+        <group position={[0, 0.2, 0.1]}>
+          {/* Left Braid */}
+          <mesh ref={leftBraidRef} position={[-0.52, -0.5, 0]} rotation={[0, 0, -0.15]}>
+            <cylinderGeometry args={[0.04, 0.02, 0.8, 8]} />
+            <meshStandardMaterial color={colors.hairColor} wireframe transparent opacity={0.35} />
+          </mesh>
+          {/* Right Braid */}
+          <mesh ref={rightBraidRef} position={[0.52, -0.5, 0]} rotation={[0, 0, 0.15]}>
+            <cylinderGeometry args={[0.04, 0.02, 0.8, 8]} />
+            <meshStandardMaterial color={colors.hairColor} wireframe transparent opacity={0.35} />
+          </mesh>
+        </group>
       </mesh>
 
-      {/* Cyber Neck Connector */}
-      <mesh position={[0, -0.75, 0]}>
-        <cylinderGeometry args={[0.18, 0.22, 0.4, 16]} />
+      {/* Cyber Neck Column */}
+      <mesh position={[0, -0.7, 0]}>
+        <cylinderGeometry args={[0.14, 0.18, 0.35, 16]} />
         <meshStandardMaterial
           color={colors.primary}
           wireframe={true}
@@ -154,9 +178,9 @@ function ProceduralAvatar({ hologramMode, mood, micActive }) {
         />
       </mesh>
 
-      {/* Futuristic Collar/Shoulder Base */}
-      <mesh position={[0, -1.05, 0]}>
-        <cylinderGeometry args={[0.6, 0.9, 0.3, 32]} />
+      {/* Collar / Shoulder Base */}
+      <mesh position={[0, -0.95, 0]}>
+        <cylinderGeometry args={[0.5, 0.8, 0.25, 32]} />
         <meshStandardMaterial
           color={colors.primary}
           wireframe={true}
@@ -165,18 +189,18 @@ function ProceduralAvatar({ hologramMode, mood, micActive }) {
         />
       </mesh>
 
-      {/* Gyroscopic Tech Halos (Data Rings) */}
+      {/* Outer Gyroscopic Rings */}
       <group ref={orbitRef1} scale={[1.1, 1.1, 1.1]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.85, 0.015, 8, 64]} />
-          <meshBasicMaterial color={colors.primary} transparent opacity={0.4} />
+          <torusGeometry args={[0.82, 0.012, 8, 64]} />
+          <meshBasicMaterial color={colors.primary} transparent opacity={0.35} />
         </mesh>
       </group>
 
-      <group ref={orbitRef2} scale={[1.2, 1.2, 1.2]} rotation={[Math.PI / 4, 0, 0]}>
+      <group ref={orbitRef2} scale={[1.18, 1.18, 1.18]} rotation={[Math.PI / 4, 0, 0]}>
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.9, 0.01, 8, 48]} />
-          <meshBasicMaterial color={colors.eyeColor} transparent opacity={0.25} />
+          <torusGeometry args={[0.88, 0.008, 8, 48]} />
+          <meshBasicMaterial color={colors.eyeColor} transparent opacity={0.2} />
         </mesh>
       </group>
     </group>
@@ -190,21 +214,20 @@ function GLBAvatar({ url, hologramMode, mood, micActive }) {
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime()
-    // Standard breathing loop for external GLB model
     if (avatarRef.current) {
-      avatarRef.current.position.y = Math.sin(t * 1.5) * 0.04 - 1.0
+      avatarRef.current.position.y = Math.sin(t * 1.5) * 0.04 - 0.95
       
       // Simple head follow camera rotation
       const head = scene.getObjectByName('Head') || scene.getObjectByName('Neck')
       if (head) {
-        head.rotation.y = Math.sin(t * 0.3) * 0.08
-        head.rotation.x = Math.sin(t * 0.7) * 0.04
+        head.rotation.y = Math.sin(t * 0.25) * 0.08
+        head.rotation.x = Math.sin(t * 0.6) * 0.04
       }
 
       // Simple mouth lip sync scaling if mic is active
       const mouth = scene.getObjectByName('Mouth') || scene.getObjectByName('Beard')
       if (mouth && micActive) {
-        mouth.scale.y = 1 + Math.abs(Math.sin(t * 20)) * 0.2
+        mouth.scale.y = 1 + Math.abs(Math.sin(t * 22)) * 0.25
       }
     }
   })
@@ -223,10 +246,9 @@ function GLBAvatar({ url, hologramMode, mood, micActive }) {
         } else {
           // Standard holographic gloss overlay
           child.material.transparent = true
-          child.material.opacity = 0.85
+          child.material.opacity = 0.8
           if (child.material.color) {
-            // Apply slight tint based on mood
-            const tint = mood === 'excited' ? new THREE.Color('#bf5af2') : new THREE.Color('#00f0ff')
+            const tint = mood === 'excited' ? new THREE.Color('#ff375f') : new THREE.Color('#00f0ff')
             child.material.color.lerp(tint, 0.4)
           }
         }
@@ -234,11 +256,10 @@ function GLBAvatar({ url, hologramMode, mood, micActive }) {
     })
   }, [scene, hologramMode, mood])
 
-  return <primitive ref={avatarRef} object={scene} scale={[1.4, 1.4, 1.4]} position={[0, -1.0, 0]} />
+  return <primitive ref={avatarRef} object={scene} scale={[1.35, 1.35, 1.35]} position={[0, -0.95, 0]} />
 }
 
 export default function Avatar({ hologramMode, mood, micActive, avatarUrl }) {
-  // If a valid avatarUrl is provided, try loading the RPM model, otherwise fallback to the procedure head
   if (avatarUrl) {
     try {
       return (
