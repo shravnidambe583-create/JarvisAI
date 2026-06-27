@@ -1,0 +1,194 @@
+:root {
+  --neon-cyan: #00f0ff;
+  --neon-purple: #bf5af2;
+  --neon-blue: #0a84ff;
+  --neon-pink: #ff375f;
+  --bg-dark: #020208;
+  --panel-bg: rgba(6, 6, 20, 0.65);
+  --panel-border: rgba(0, 240, 255, 0.15);
+  --glow-cyan: 0 0 12px rgba(0, 240, 255, 0.4);
+  --glow-purple: 0 0 12px rgba(191, 90, 242, 0.4);
+  --font-main: 'Outfit', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  background: var(--bg-dark);
+  color: #e2e8f0;
+  font-family: var(--font-main);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  max-width: none;
+  border: none;
+  text-align: left;
+}
+
+/* Glassmorphic Panel Base */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--panel-border);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
+.glass-panel:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 12px 40px 0 rgba(0, 240, 255, 0.1), 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.glass-panel-header {
+  border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 240, 255, 0.03);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+/* Buttons */
+.glow-button {
+  background: rgba(0, 240, 255, 0.05);
+  border: 1px solid var(--neon-cyan);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s ease-in-out;
+  box-shadow: inset 0 0 4px rgba(0, 240, 255, 0.2);
+}
+
+.glow-button:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: var(--glow-cyan), 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+.glow-button-purple {
+  background: rgba(191, 90, 242, 0.05);
+  border: 1px solid var(--neon-purple);
+  box-shadow: inset 0 0 4px rgba(191, 90, 242, 0.2);
+}
+
+.glow-button-purple:hover {
+  background: var(--neon-purple);
+  color: #000;
+  box-shadow: var(--glow-purple), 0 0 20px rgba(191, 90, 242, 0.2);
+}
+
+/* Animations */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes grid-move {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+.scanline-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 240, 255, 0.06) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 0, 0, 0.03),
+    rgba(0, 255, 0, 0.01),
+    rgba(0, 0, 255, 0.03)
+  );
+  background-size: 100% 4px, 6px 100%;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.hologram-scan {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(to bottom, transparent, var(--neon-cyan), transparent);
+  box-shadow: var(--glow-cyan);
+  opacity: 0.3;
+  animation: scanline 6s linear infinite;
+  pointer-events: none;
+}
+
+.glow-text {
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
+}
+
+.glow-text-purple {
+  text-shadow: 0 0 8px rgba(191, 90, 242, 0.6);
+}
+
+/* Custom CSS Grids for Widgets */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 340px;
+  grid-template-rows: 60px 1fr;
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.interactive {
+  pointer-events: auto;
+}
